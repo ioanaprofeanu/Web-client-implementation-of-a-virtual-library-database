@@ -1,0 +1,82 @@
+# Profeanu Ioana, 323CA
+# README file
+-------------------------------------------------------------------------------
+* Program description *
+   ~ Implemented the web client part of a client-server application which is
+   used to manage a virtual library database. The client interacts with the
+   server using STDIN commands and is able to send POST, GET and DELETE
+   requests to the server.
+-------------------------------------------------------------------------------
+* Overview *
+   ~ The archive contains:
+   	~ buffer.c, buffer.h - used to parse buffers;
+   	~ parson.c, parson.h - used to parse strings into json format;
+   	~ requests.c, requests.h - used to compose the POST, GET and DELETE
+   	requests for the server, depending on the host, url, cookies and jwt
+   	tokens;
+   	~ helpers.c, helpers.h - contains a diversity of functions and defines
+   	used throughout the implementation, including functions for sending and
+   	receiving messages to/from the server and parsing strings;
+   	~ client.c, client.h - contains the implementation of the client, who
+   	sends the server different commands received from stdin;
+-------------------------------------------------------------------------------
+* The Web Client *
+  	! Note that the Error Management is described in the next section !
+   ~ the clients enters the commands (which have a certain format) from STDIN
+   and according to it, a certain action is performed;
+   ~ Register Command: receive the username and password from STDIN, transform
+   it into json format, send a POST message with the given data to the server
+   and print a confirmation message according to the response; for success, the
+   given username must be new and the client must not be previously connected.
+   ~ Login Command: similar to register, the only difference is that the user-
+   name must exist and the credentials should match the existing account; it
+   extracts and prints the session cookie;
+   ~ Enter library Command: computes a GET request to the server and retrieves,
+   stores and prints the JWT token extracted from the response by parsing the
+   json;
+   ~ Get Books Command: send a GET request to the server and using the
+   response, parse the json array and display the information about all the
+   books, which is stored within each json object;
+   ~ Get Book Command: using a valid book ID given by the client, send a GET
+   request to the server and using the json object found within the response,
+   extract the values stored at the wanted keys and print them;
+   ~ Add Book Command: using valid information about a book, create a new json
+   object and send it to the server using a POST request;
+   ~ Delete Book Command: using a valid book ID given by the client, send a GET
+   request to the server, and the server deletes the wanted book from the
+   library;
+   ~ Logout Command: the client is disconnected from the session by sending a
+   get request to the server;
+   ~ Exit Command: exits the program;
+-------------------------------------------------------------------------------
+* Error Management *
+   ~ A specific error message is shown depending on each different scenario:
+   	~ a succcess message is shown each time the received response from the
+   	server is ok; otherwise, a failure message is shown; this way, the
+   	client knows if his request was correctly performed or not;
+   	~ if the client enters a wrong command;
+   	~ if an already connected client wants to register or login;
+   	~ if trying to register with an already taken username;
+   	~ if trying to login but credentials are not correct or the username
+   	doesn't exist;
+   	~ if the response from the server does not contain enough tokens;
+   	~ if a client wants to enter the library, get book/s, add books, delete
+   	book or logout without being connected;
+   	~ if a client wants to access the library but was already been granted
+   	access;
+   	~ when a client wants to get book/s, add books or delete books without
+   	having access to the library;
+   	~ when the provided data about books is incorect (eg. id not a number,
+   	title, author, genre etc. not a valid string), a specific error message
+   	is shown;
+   	~ if a searched book is not found, the client receives not found error;
+-------------------------------------------------------------------------------
+* Resources *
+~ Used the provided solution for Laborator 10 as a starting point for the implementation: 
+	- https://ocw.cs.pub.ro/courses/pc/laboratoare/10
+~ Used the Parson library in order to easily format jsons into strings and
+strings into jsons. The library was easy to use due to the README file it
+provides, thus the reason why I chose to use it.
+	- https://github.com/kgabis/parson
+-------------------------------------------------------------------------------
+
